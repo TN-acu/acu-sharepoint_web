@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タイマーアプリ</title>
+    <style>
+        body {
+            font-family: sans-serif; display: flex; justify-content: center;
+            align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0;
+        }
+        .timer-container {
+            background-color: white; padding: 30px; border-radius: 10px;
+            box-shadow: 0 6px 10px rgba(0,0,0,0.1); text-align: center;
+        }
+        #timer-display { font-size: 8em; margin: 30px 0; font-family: monospace; }
+        .controls, .inputs { margin-bottom: 30px; }
+        input[type="number"] { width: 120px; font-size: 4.2em; text-align: center; }
+        button { font-size: 3.2em; padding: 10px 20px; margin: 0 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="timer-container">
+    <h1>タイマー</h1>
+    <div class="inputs">
+        <input type="number" id="minutes-input" placeholder="分" min="0" value="2">
+        <span>:</span>
+        <input type="number" id="seconds-input" placeholder="秒" min="0" max="59" value="30">
+    </div>
+    <div id="timer-display">01:30</div>
+    <div class="controls">
+        <button id="start-btn">スタート</button>
+        <button id="stop-btn">ストップ</button>
+        <button id="reset-btn">リセット</button>
+    </div>
+</div>
+
+<script>
+// --- ここからJavaScriptコード ---
+const minutesInput = document.getElementById('minutes-input');
+const secondsInput = document.getElementById('seconds-input');
+const timerDisplay = document.getElementById('timer-display');
+const startBtn = document.getElementById('start-btn');
+const stopBtn = document.getElementById('stop-btn');
+const resetBtn = document.getElementById('reset-btn');
+
+// ★★注意★★ ここのURLは、SharePoint上のalarm.mp3のURL
+const alarmSound = new Audio('alarm.mp3');
+
+let timerId = null;
+let remainingTime = 0;
+
+function updateInitialDisplay() {
+    const minutes = parseInt(minutesInput.value) || 0;
+    const seconds = parseInt(secondsInput.value) || 0;
+    timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function updateDisplay() {
+    const minutes = Math.floor(remainingTime / 60);
+    const seconds = remainingTime % 60;
+    timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function startTimer() {
+    if (timerId !== null) { return; }
+    if (remainingTime <= 0) {
+        const minutes = parseInt(minutesInput.value) || 0;
+        const seconds = parseInt(secondsInput.value) || 0;
+        remainingTime = minutes * 60 + seconds;
+    }
+    if (remainingTime <= 0) {
+        alert('時間を設定してください。');
+        return;
+    }
+    updateDisplay();
+    timerId = setInterval(() => {
+        remainingTime--;
+        updateDisplay();
+        if (remainingTime <= 0) {
+            stopTimer();
+            alarmSound.play().catch(e => console.error("音声の再生に失敗しました:", e)); // エラー処理を追加
+           // alert('時間です！');
+        }
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timerId);
+    timerId = null;
+}
+
+function resetTimer() {
+    stopTimer();
+    remainingTime = 0;
+    updateInitialDisplay();
+}
+
+startBtn.addEventListener('click', startTimer);
+stopBtn.addEventListener('click', stopTimer);
+resetBtn.addEventListener('click', resetTimer);
+minutesInput.addEventListener('input', updateInitialDisplay);
+secondsInput.addEventListener('input', updateInitialDisplay);
+
+updateInitialDisplay();
+// --- JavaScriptコードここまで ---
+</script>
+
+</body>
+</html>
