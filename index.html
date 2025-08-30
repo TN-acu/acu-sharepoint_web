@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タイマーアプリ</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .timer-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        #timer-display {
+            font-size: 4em;
+            margin: 20px 0;
+            font-family: monospace;
+        }
+        .controls, .inputs {
+            margin-bottom: 20px;
+        }
+        input[type="number"] {
+            width: 60px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="timer-container">
+    <h1>タイマー</h1>
+    <div class="inputs">
+        <input type="number" id="minutes-input" placeholder="分" min="0" value="0">
+        <span>:</span>
+        <input type="number" id="seconds-input" placeholder="秒" min="0" max="59" value="5">
+    </div>
+    <div id="timer-display">01:30</div>
+    <div class="controls">
+        <button id="start-btn">スタート</button>
+        <button id="stop-btn">ストップ</button>
+        <button id="reset-btn">リセット</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
